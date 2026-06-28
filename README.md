@@ -36,7 +36,7 @@ This project provides a ready-to-run Docker Compose stack that:
 
 ```bash
 git clone https://github.com/pramod4lk/guacamole-cloudflare-secure-tunnel.git
-cd <repo-name>
+cd guacamole-cloudflare-secure-tunnel
 ````
 
 ---
@@ -298,6 +298,3 @@ sudo docker compose logs -f guacamole
 This project is released under the **MIT License**.
 
 Add a `LICENSE` file to the repository root before publishing.
-
-```
-```
