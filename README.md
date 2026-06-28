@@ -1,8 +1,8 @@
-# Guacamole PostgreSQL + Cloudflare Tunnel (AutoInit)
+# Guacamole PostgreSQL + Cloudflare Tunnel
 
 A reproducible, self-hosted **Apache Guacamole** stack using **Docker Compose**, **PostgreSQL**, and **Cloudflare Tunnel**.
 
-This repository automatically provisions PostgreSQL, applies the Guacamole database schema (idempotently), and starts **guacd**, the **Guacamole web application**, and an optional **Cloudflare Tunnel** with minimal manual configuration.
+This repository automatically provisions PostgreSQL, applies the Guacamole database schema, and starts **guacd**, the **Guacamole web application**, and an optional **Cloudflare Tunnel** with minimal manual configuration.
 
 ---
 
@@ -15,14 +15,14 @@ This project provides a ready-to-run Docker Compose stack that:
 - Applies the Guacamole JDBC schema only when required.
 - Starts `guacd` and the official Guacamole web application.
 - Optionally exposes Guacamole securely through Cloudflare Tunnel.
-- Uses an idempotent initialization process that is safe across restarts and existing database volumes.
+- Uses an initialization process that is safe across restarts and existing database volumes.
 
 ---
 
 ## Features
 
 - ✅ Automatic PostgreSQL provisioning
-- ✅ Idempotent schema installation
+- ✅ Schema installation
 - ✅ Persistent database storage
 - ✅ Optional Cloudflare Tunnel integration
 - ✅ Production deployment recommendations
@@ -35,7 +35,7 @@ This project provides a ready-to-run Docker Compose stack that:
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
+git clone https://github.com/pramod4lk/guacamole-cloudflare-secure-tunnel.git
 cd <repo-name>
 ````
 
@@ -115,7 +115,6 @@ If `TUNNEL_TOKEN` is configured, `cloudflared` automatically exposes the applica
 ├── docker-compose.yaml
 ├── .env
 ├── initdb.sql
-├── schema.sql
 └── README.md
 ```
 
@@ -130,7 +129,6 @@ If `TUNNEL_TOKEN` is configured, `cloudflared` automatically exposes the applica
 | `docker-compose.yaml` | Defines the PostgreSQL, Guacamole, guacd and Cloudflare services |
 | `.env`                | Environment variables and secrets                                |
 | `initdb.sql`          | Optional SQL executed on the first PostgreSQL startup            |
-| `schema.sql`          | Guacamole PostgreSQL schema                                      |
 
 ---
 
@@ -139,8 +137,6 @@ If `TUNNEL_TOKEN` is configured, `cloudflared` automatically exposes the applica
 | Variable            | Description                             |
 | ------------------- | --------------------------------------- |
 | `POSTGRES_PASSWORD` | Password for PostgreSQL                 |
-| `POSTGRES_USER`     | PostgreSQL user (optional)              |
-| `POSTGRES_DB`       | Database name (default: `guacamole_db`) |
 | `TUNNEL_TOKEN`      | Cloudflare Tunnel token                 |
 
 ---
@@ -294,21 +290,6 @@ sudo docker compose logs -f guacamole
 * Bind Guacamole to `127.0.0.1:8080` if only local access is required.
 * Use Cloudflare Tunnel instead of exposing port `8080` publicly.
 * Regularly back up the PostgreSQL volume.
-
----
-
-# Contributing
-
-Contributions are welcome.
-
-Please include:
-
-* Reproduction steps
-* Logs
-* Expected behaviour
-* Environment information
-
-Documentation improvements and examples are always appreciated.
 
 ---
 
