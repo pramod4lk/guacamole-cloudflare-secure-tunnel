@@ -1,0 +1,60 @@
+services:
+    postgres:
+      image: postgres:latest
+      container_name: postgres
+      restart: unless-stopped
+      environment:
+        POSTGRES_DB: guacamole_db
+        POSTGRES_USER: guacamole_user
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      volumes:
+        - postgres_data:/var/lib/postgresql
+        - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql:ro
+      networks:
+        - guacnet
+
+    guacd:
+      image: guacamole/guacd:latest
+      container_name: guacd
+      restart: unless-stopped
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      networks:
+        - guacnet
+
+    guacamole:
+      image: guacamole/guacamole:latest
+      container_name: guacamole
+      restart: unless-stopped
+      depends_on:
+        - postgres
+        - guacd
+      environment:
+        GUACD_HOSTNAME: guacd
+        POSTGRESQL_HOSTNAME: postgres
+        POSTGRESQL_DATABASE: guacamole_db
+        POSTGRESQL_USERNAME: guacamole_user
+        POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      ports:
+        - "8080:8080"
+      networks:
+        - guacnet
+
+    cloudflared:
+      image: cloudflare/cloudflared:latest
+      container_name: cloudflared
+      restart: unless-stopped
+      command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      networks:
+        - guacnet
+      
+volumes:
+    postgres_data:
+
+networks:
+    guacnet:
+      driver: bridge
